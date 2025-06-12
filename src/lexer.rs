@@ -1,8 +1,10 @@
 use std::ffi::c_void;
+use std::str::FromStr;
 use logos::{Logos};
 #[derive(Logos, Debug, PartialEq)]
 //This is the tokenizer its goal is to take a stream of code into a stream of tokens we can use 
 pub enum Token {
+    
     Number(i64), // Number token just is a 64bit int
     Plus,   //Plus operator +
     Minus,  //Minus operator -
@@ -38,7 +40,12 @@ impl Lexer{
     fn advance(&mut self){
         self.position += 1;
     }
+    pub fn what_is_next_char(&self)->Option<char>{
+        self.input.get(self.position+1).copied()
+    }
+
     pub fn next_token(&mut self)-> Token{
+        
         while let Some(c) = self.current_char(){
             if(!c.is_whitespace()){
                 break;
@@ -49,9 +56,9 @@ impl Lexer{
         if self.eof(){
             return Token::EOF
         }
-        
+
         let char = self.current_char().unwrap();
-        match char { 
+        match char {
             '+' =>{
                 self.advance();
                 Token::Plus
@@ -66,12 +73,13 @@ impl Lexer{
             } ,
             '/' =>{
                 self.advance();
-                Token::Div 
+                Token::Div
             } ,
             '%' =>{
-                self.advance(); 
-                Token::Mod  
+                self.advance();
+                Token::Mod
             } ,
+                
             _ if char.is_ascii_digit() => {
                 let mut num = String::new();
                 while let Some(d) = self.current_char(){
@@ -86,7 +94,7 @@ impl Lexer{
                 }else{
                     panic!("Invalid number given at: {} position number:{}",self.position, num);
                 }
-                
+
             }
             _ => panic!("Unexpected character: {} ", char),
         };
