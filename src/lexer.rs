@@ -44,7 +44,12 @@ impl Lexer{
         self.input.get(self.position+1).copied()
     }
     pub fn what_is_char_at(&self,offset: usize)->Option<char>{
-        self.input.get(self.position+offset).copied()
+        if self.position+offset >= self.input.len() {
+            self.input.get(self.position+offset).copied()
+        }else{
+            panic!("Position out of range of the input");
+        }
+        
     }
 
     pub fn next_token(&mut self)-> Token{
