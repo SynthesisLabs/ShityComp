@@ -4,7 +4,7 @@ use logos::{Logos};
 #[derive(Logos, Debug, PartialEq)]
 //This is the tokenizer its goal is to take a stream of code into a stream of tokens we can use 
 pub enum Token {
-    
+    Float(f64),
     Number(i64), // Number token just is a 64bit int
     Plus,   //Plus operator +
     Minus,  //Minus operator -
@@ -64,6 +64,15 @@ impl Lexer{
                 Token::Plus
             } ,
             '-' =>{
+                let mut num = String::new();
+
+                while self.what_is_next_char().unwrap().is_ascii_digit(){
+                    num.push(char);
+                    self.advance();
+                }
+                if !num.is_empty(){
+                    Token::Float(f64::from_str(&num).unwrap());
+                }
                 self.advance();
                 Token::Minus
             } ,
