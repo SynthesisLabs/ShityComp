@@ -3,12 +3,37 @@ use logos::{Logos};
 #[derive(Logos, Debug, PartialEq)]
 //This is the tokenizer its goal is to take a stream of code into a stream of tokens we can use 
 pub enum Token {
-    #[regex(r"\d+")] Number,
-    #[token("+")] Plus,
-    #[token("-")] Minus,
-    #[token("*")] Mul,
-    #[token("/")] Div,
-    #[token("%")] Mod,
+    Number(i64), // Number token just is a 64bit int
+    Plus,   //Plus operator +
+    Minus,  //Minus operator -
+    Mul,    //Multiplier operator *
+    Div,    //Division operator /
+    Mod,    //Modules operator %
+    EOF,    //End of input
 }
-fn test() {
+pub struct Lexer{
+    input: Vec<char>,
+    position: usize,
+}
+impl Lexer{
+    pub fn new(input: &str) -> Self{
+        Lexer{
+            input: input.chars().collect(),
+            position: 0,
+        }
+    }
+    fn current_char(&self)->Option<char>{
+        self.input.get(self.position).copied()
+    }
+    //function to decide if the end of the input hase been reached
+    fn eof(&self)->bool{
+        if self.position >= self.input.len() {
+            true
+        }else{
+            false
+        }
+    }
+    fn advance(&mut self){
+        self.position += 1;
+    }
 }
