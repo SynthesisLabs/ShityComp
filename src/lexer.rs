@@ -41,7 +41,13 @@ impl Lexer{
         self.position += 1;
     }
     pub fn what_is_next_char(&self)->Option<char>{
-        self.input.get(self.position+1).copied()
+        let mut new_pos = self.position+1;
+        if self.input.len()  >= new_pos{
+            self.input.get(self.position+1).copied()
+        }else{
+            panic!("Position out of range");
+        }
+        
     }
     pub fn what_is_char_at(&self,offset: usize)->Option<char>{
         if self.position+offset >= self.input.len() {
