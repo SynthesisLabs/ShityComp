@@ -10,6 +10,7 @@ pub enum Token {
     Div,    //Division operator /
     Mod,    //Modules operator %
     EOF,    //End of input
+    Whitespace,
     Unknown,
 }
 pub struct Lexer{
@@ -43,10 +44,52 @@ impl Lexer{
                 break;
             }
             self.advance();
+            return Token::Whitespace;
         }
         if self.eof(){
             return Token::EOF
         }
+        
+        let char = self.current_char().unwrap();
+        match char { 
+            '+' =>{
+                self.advance();
+                Token::Plus
+            } ,
+            '-' =>{
+                self.advance();
+                Token::Minus
+            } ,
+            '*' =>{
+                self.advance();
+                Token::Mul
+            } ,
+            '/' =>{
+                self.advance();
+                Token::Div 
+            } ,
+            '%' =>{
+                self.advance(); 
+                Token::Mod  
+            } ,
+            _ if char.is_ascii_digit() => {
+                let mut num = String::new();
+                while let Some(d) = self.current_char(){
+                    if !d.is_ascii_digit(){
+                        break;
+                    }
+                    num.push(d);
+                    self.advance();
+                }
+                if let Ok(num) = num.parse::<i64>(){
+                    return Token::Number(num)
+                }else{
+                    panic!("Invalid number given at: {} position number:{}",self.position, num);
+                }
+                
+            }
+            _ => panic!("Unexpected character: {} ", char),
+        };
         return Token::Unknown
     }
 }
