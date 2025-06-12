@@ -10,6 +10,7 @@ pub enum Token {
     Div,    //Division operator /
     Mod,    //Modules operator %
     EOF,    //End of input
+    Unknown,
 }
 pub struct Lexer{
     input: Vec<char>,
@@ -43,6 +44,9 @@ impl Lexer{
             }
             self.advance();
         }
-        
+        if self.eof(){
+            return Token::EOF
+        }
+        return Token::Unknown
     }
 }
