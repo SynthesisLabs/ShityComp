@@ -43,6 +43,9 @@ impl Lexer{
     pub fn what_is_next_char(&self)->Option<char>{
         self.input.get(self.position+1).copied()
     }
+    pub fn what_is_char_at(&self,offset: usize)->Option<char>{
+        self.input.get(self.position+offset).copied()
+    }
 
     pub fn next_token(&mut self)-> Token{
         
