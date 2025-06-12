@@ -36,4 +36,13 @@ impl Lexer{
     fn advance(&mut self){
         self.position += 1;
     }
+    pub fn next_token(&mut self)-> Token{
+        while let Some(c) = self.current_char(){
+            if(!c.is_whitespace()){
+                break;
+            }
+            self.advance();
+        }
+        
+    }
 }
