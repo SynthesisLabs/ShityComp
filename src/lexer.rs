@@ -15,6 +15,10 @@ pub enum Token {
     Whitespace,
     Unknown,
 }
+pub enum EOF<Char,Token>{
+    Sucess(Char),
+    Error(Token),
+}
 pub struct Lexer{
     input: Vec<char>,
     position: usize,
@@ -49,11 +53,13 @@ impl Lexer{
         }
         
     }
-    pub fn what_is_char_at(&self,offset: usize)->Option<char>{
+    pub fn what_is_char_at(&self, offset: usize) -> EOF<Option<char>, Token> {
         if self.position+offset >= self.input.len() {
-            self.input.get(self.position+offset).copied()
+            let result = self.input.get(self.position + offset).copied();
+            EOF::Sucess(result)
         }else{
-            panic!("Position out of range of the input");
+            println!("Position out of range");
+            return EOF::Error(Token::EOF);
         }
         
     }
