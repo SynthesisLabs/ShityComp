@@ -44,12 +44,13 @@ impl Lexer{
     fn advance(&mut self){
         self.position += 1;
     }
-    pub fn what_is_next_char(&self)->Option<char>{
+    pub fn what_is_next_char(&self)->EOF<Option<char>, Token>{
         let new_pos = self.position+1;
         if self.input.len()  >= new_pos{
-            self.input.get(self.position+1).copied()
+            let result = self.input.get(self.position+1).copied();
+            EOF::Sucess(result)
         }else{
-            panic!("Position out of range");
+            EOF::Error(Token::EOF)
         }
         
     }
@@ -59,7 +60,7 @@ impl Lexer{
             EOF::Sucess(result)
         }else{
             println!("Position out of range");
-            return EOF::Error(Token::EOF);
+            EOF::Error(Token::EOF)
         }
         
     }
