@@ -1,4 +1,3 @@
-use std::ffi::c_void;
 use std::str::FromStr;
 use logos::{Logos};
 #[derive(Logos, Debug, PartialEq)]
@@ -15,8 +14,10 @@ pub enum Token {
     Whitespace,
     Unknown,
 }
-pub enum EOF<Char,Token>{
-    Sucess(Char),
+#[derive(Debug)]
+#[derive(PartialEq)]
+pub enum EOF{
+    Success(Option<char>),
     Error(Token),
 }
 pub struct Lexer{
@@ -44,20 +45,20 @@ impl Lexer{
     fn advance(&mut self){
         self.position += 1;
     }
-    pub fn what_is_next_char(&self)->EOF<Option<char>, Token>{
+    pub fn what_is_next_char(&self)->EOF{
         let new_pos = self.position+1;
-        if self.input.len()  >= new_pos{
+        if self.input.len()  > new_pos{
             let result = self.input.get(self.position+1).copied();
-            EOF::Sucess(result)
+            EOF::Success(result)
         }else{
             EOF::Error(Token::EOF)
         }
         
     }
-    pub fn what_is_char_at(&self, offset: usize) -> EOF<Option<char>, Token> {
+    pub fn what_is_char_at(&self, offset: usize) -> EOF{
         if self.position+offset >= self.input.len() {
             let result = self.input.get(self.position + offset).copied();
-            EOF::Sucess(result)
+            EOF::Success(result)
         }else{
             println!("Position out of range");
             EOF::Error(Token::EOF)
@@ -86,10 +87,14 @@ impl Lexer{
             } ,
             '-' =>{
                 let mut num = String::new();
-
-                while self.what_is_next_char().unwrap().is_ascii_digit(){
-                    num.push(char);
-                    self.advance();
+                while self.what_is_next_char() == EOF::Success(self.current_char()) {
+                    if c.is_ascii_digit(){
+                        num.push(char);
+                        self.advance();
+                    }else{
+                        break;
+                    }
+                   
                 }
                 if !num.is_empty(){
                     Token::Float(f64::from_str(&num).unwrap());
