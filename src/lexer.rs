@@ -10,16 +10,12 @@ pub enum Token {
     Mul,    //Multiplier operator *
     Div,    //Division operator /
     Mod,    //Modules operator %
-    EOF,    //End of input
+    EOF,
+    Err,//End of input
     Whitespace,
     Unknown,
 }
-#[derive(Debug)]
-#[derive(PartialEq)]
-pub enum EOF{
-    Success(Option<char>),
-    Error(Token),
-}
+
 pub struct Lexer{
     input: Vec<char>,
     position: usize,
@@ -45,23 +41,26 @@ impl Lexer{
     fn advance(&mut self){
         self.position += 1;
     }
-    pub fn what_is_next_char(&self)->EOF{
-        let new_pos = self.position+1;
-        if self.input.len()  > new_pos{
-            let result = self.input.get(self.position+1).copied();
-            EOF::Success(result)
+    pub fn what_is_next_char(&self)->Result<Option<char>,Token>{
+        let next_pos = self.position+1;
+        if self.input.len()  > next_pos{
+            let next_pos = self.position +1;
+            let next_char = self.input.get(next_pos).copied();
+            Ok(next_char)
         }else{
-            EOF::Error(Token::EOF)
+            Err(Token::EOF)
         }
         
     }
-    pub fn what_is_char_at(&self, offset: usize) -> EOF{
-        if self.position+offset >= self.input.len() {
-            let result = self.input.get(self.position + offset).copied();
-            EOF::Success(result)
+    pub fn what_is_char_at(&self, offset: usize) -> Result<Option<char>,Token>{
+        let new_pos = self.position+offset;
+        if new_pos >= self.input.len() {
+            let result = self.input.get(new_pos).copied();
+            Ok(result)
+
         }else{
             println!("Position out of range");
-            EOF::Error(Token::EOF)
+            Err(Token::EOF)
         }
         
     }
@@ -69,7 +68,7 @@ impl Lexer{
     pub fn next_token(&mut self)-> Token{
         
         while let Some(c) = self.current_char(){
-            if(!c.is_whitespace()){
+            if !c.is_whitespace() {
                 break;
             }
             self.advance();
@@ -87,14 +86,13 @@ impl Lexer{
             } ,
             '-' =>{
                 let mut num = String::new();
-                while self.what_is_next_char() == EOF::Success(self.current_char()) {
-                    if c.is_ascii_digit(){
-                        num.push(char);
+                match self.what_is_next_char(){
+                    Ok(Some(c)) if c.is_ascii_digit() =>{
+                        num.push(c);
                         self.advance();
-                    }else{
-                        break;
                     }
-                   
+                    Ok(Some(_)) | Ok(None)=> return Token::Err,
+                    Err(token) => return token,
                 }
                 if !num.is_empty(){
                     Token::Float(f64::from_str(&num).unwrap());
@@ -127,12 +125,12 @@ impl Lexer{
                 if let Ok(num) = num.parse::<i64>(){
                     return Token::Number(num)
                 }else{
-                    panic!("Invalid number given at: {} position number:{}",self.position, num);
+                    return Token::Err;
                 }
 
             }
             _ => panic!("Unexpected character: {} ", char),
         };
-        return Token::Unknown
+        Token::Unknown
     }
 }
