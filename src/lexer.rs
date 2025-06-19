@@ -145,6 +145,20 @@ impl Lexer{
             num.push('.');
             self.advance();
         }
+        while let Some(c) = self.current_char() {
+            if c.is_ascii_digit() {
+                num.push(c);
+                self.advance();
+            }else if c == "." && !contains_dot {
+                contains_dot = true;
+                num.push('.');
+                self.advance();
+            }else{
+                break;
+            }
+            
+            
+        }
         
     }
 }
