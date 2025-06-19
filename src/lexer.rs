@@ -124,9 +124,9 @@ impl Lexer{
             }
             char if char.is_ascii_digit() => {
                 self.parse_nums()
-            }
+            },
             _ => {
-                
+
                 eprint!("unexpected character {}", char);
                 return Token::Unknown
             }
@@ -135,12 +135,14 @@ impl Lexer{
     fn parse_nums(&mut self)-> Token{
         let mut num = String::new();
         let mut contains_dot = false;
-        
+    
+        //check if the current number contains a dot
         if let Some('.') = self.current_char() {
             contains_dot = true;
             num.push('.');
             self.advance();
         }
+        //check for integers and a check for if the integers check fails
         while let Some(c) = self.current_char() {
             if c.is_ascii_digit() {
                 num.push(c);
@@ -152,6 +154,7 @@ impl Lexer{
             }else{
                 break;
             }
+            //checks for scientific notations
             if let Some(c) = self.current_char() {
                 if c  == 'e' || c == 'E'{
                     num.push(c);
@@ -163,6 +166,7 @@ impl Lexer{
                         }
                     }
                 }
+                //check to see if after the scientific notation there are numbers if not return an error due illegal notation
                 let mut hase_exponents = false;
                 while let Some(c) = self.current_char() {
                     if c.is_ascii_digit(){
@@ -175,6 +179,7 @@ impl Lexer{
                     return Token::Err;
                 }
             }
+            // actually parse the string to an int/float and return them
             return if contains_dot || num.contains('e') || num.contains('E') {
                 match num.parse::<f64>() {
                     Ok(f) => Token::Float(f),
@@ -191,9 +196,9 @@ impl Lexer{
                     }
                 }
             }
-            
+
         }
         return Token::Err;
-        
+
     }
 }
