@@ -129,7 +129,10 @@ impl Lexer{
                 }
 
             }
-            _ => panic!("Unexpected character: {} ", char),
+            _ => {
+                eprint!("unexpected character {}",char); return Token::Err
+            }
+            
         };
         Token::Unknown
     }
