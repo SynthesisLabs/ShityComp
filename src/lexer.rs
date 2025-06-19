@@ -79,61 +79,61 @@ impl Lexer{
         }
 
         let char = self.current_char().unwrap();
-        match char {
-            '+' =>{
+        println!("char: {:?}", char);
+        return match char {
+            '+' => {
                 self.advance();
                 Token::Plus
-            } ,
-            '-' =>{
+            },
+            '-' => {
                 let mut num = String::new();
-                match self.what_is_next_char(){
-                    Ok(Some(c)) if c.is_ascii_digit() =>{
+                match self.what_is_next_char() {
+                    Ok(Some(c)) if c.is_ascii_digit() => {
                         num.push(c);
                         self.advance();
                     }
-                    Ok(Some(_)) | Ok(None)=> return Token::Err,
+                    Ok(Some(_)) | Ok(None) => return Token::Err,
                     Err(token) => return token,
                 }
-                if !num.is_empty(){
+                if !num.is_empty() {
                     Token::Float(f64::from_str(&num).unwrap());
                 }
                 self.advance();
                 Token::Minus
-            } ,
-            '*' =>{
+            },
+            '*' => {
                 self.advance();
                 Token::Mul
-            } ,
-            '/' =>{
+            },
+            '/' => {
                 self.advance();
                 Token::Div
-            } ,
-            '%' =>{
+            },
+            '%' => {
                 self.advance();
                 Token::Mod
-            } ,
-                
+            },
+
             _ if char.is_ascii_digit() => {
                 let mut num = String::new();
-                while let Some(d) = self.current_char(){
-                    if !d.is_ascii_digit(){
+                while let Some(d) = self.current_char() {
+                    if !d.is_ascii_digit() {
                         break;
                     }
                     num.push(d);
                     self.advance();
                 }
-                if let Ok(num) = num.parse::<i64>(){
-                    return Token::Number(num)
-                }else{
-                    return Token::Err;
+                if let Ok(num) = num.parse::<i64>() {
+                    Token::Number(num)
+                } else {
+                    Token::Err
                 }
-
             }
             _ => {
-                eprint!("unexpected character {}",char); return Token::Err
+                
+                eprint!("unexpected character {}", char);
+                Token::Err
             }
-            
         };
-        Token::Unknown
     }
 }
