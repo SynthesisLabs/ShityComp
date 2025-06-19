@@ -8,7 +8,7 @@ fn main() {
     loop{
         let token = lexer.next_token();
         println!("{:?}", token);
-        if token == Token::EOF{
+        if token == Token::EOF||token == Token::Err{
             break;
         }
     }
