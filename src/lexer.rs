@@ -113,14 +113,22 @@ impl Lexer{
                 self.advance();
                 Token::Mod
             },
-
+            '.' =>{
+                match self.what_is_next_char() {
+                    Ok(Some(c)) if c.is_ascii_digit() => {
+                        self.parse_nums()
+                    }
+                    Err(token) => return token,
+                    _ => return Token::Err,
+                }
+            }
             char if char.is_ascii_digit() => {
                 self.parse_nums()
             }
             _ => {
                 
                 eprint!("unexpected character {}", char);
-                Token::Err
+                return Token::Unknown
             }
         };
     }
@@ -167,18 +175,18 @@ impl Lexer{
                     return Token::Err;
                 }
             }
-            if contains_dot || num.contains('e')||num.contains('E'){
-                match num.parse::<f64>(){
-                    Ok(f) => return Token::Float(f),
-                    Err(_) => return Token::Err,
+            return if contains_dot || num.contains('e') || num.contains('E') {
+                match num.parse::<f64>() {
+                    Ok(f) => Token::Float(f),
+                    Err(_) => Token::Err,
                 }
-            }else{
-                match  num.parse::<i64>() {
-                    Ok(i)=> return Token::Number(i),
-                    Err(_)=>{
-                        match num.parse::<f64>(){
-                            Ok(float) => return Token::Float(float),
-                            Err(_) => return Token::Err,
+            } else {
+                match num.parse::<i64>() {
+                    Ok(i) => Token::Number(i),
+                    Err(_) => {
+                        match num.parse::<f64>() {
+                            Ok(float) => Token::Float(float),
+                            Err(_) => Token::Err,
                         }
                     }
                 }
