@@ -175,8 +175,24 @@ impl Lexer{
                         hase_exponents = true;
                     }
                 }
-                if !contains_dot {
+                if !hase_exponents {
                     return Token::Err;
+                }
+            }
+            if contains_dot || num.contains('e')||num.contains('E'){
+                match num.parse::<f64>(){
+                    Ok(f) => return Token::Float(f),
+                    Err(_) => return Token::Err,
+                }
+            }else{
+                match  num.parse::<i64>() {
+                    Ok(i)=> return Token::Number(i),
+                    Err(_)=>{
+                        match num.parse::<f64>(){
+                            Ok(float) => return Token::Float(float),
+                            Err(_) => return Token::Err,
+                        }
+                    }
                 }
             }
             
