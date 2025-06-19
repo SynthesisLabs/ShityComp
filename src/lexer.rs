@@ -114,7 +114,7 @@ impl Lexer{
                 Token::Mod
             },
 
-            _ if char.is_ascii_digit() => {
+            char if char.is_ascii_digit() => {
                 let mut num = String::new();
                 while let Some(d) = self.current_char() {
                     if !d.is_ascii_digit() {
@@ -135,5 +135,16 @@ impl Lexer{
                 Token::Err
             }
         };
+    }
+    fn parse_nums(&mut self)-> Token{
+        let mut num = String::new();
+        let mut contains_dot = false;
+        
+        if let Some('.') = self.current_char() {
+            contains_dot = true;
+            num.push('.');
+            self.advance();
+        }
+        
     }
 }
