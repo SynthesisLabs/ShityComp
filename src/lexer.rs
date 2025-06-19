@@ -115,19 +115,7 @@ impl Lexer{
             },
 
             char if char.is_ascii_digit() => {
-                let mut num = String::new();
-                while let Some(d) = self.current_char() {
-                    if !d.is_ascii_digit() {
-                        break;
-                    }
-                    num.push(d);
-                    self.advance();
-                }
-                if let Ok(num) = num.parse::<i64>() {
-                    Token::Number(num)
-                } else {
-                    Token::Err
-                }
+                self.parse_nums()
             }
             _ => {
                 
