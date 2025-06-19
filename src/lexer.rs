@@ -149,16 +149,39 @@ impl Lexer{
             if c.is_ascii_digit() {
                 num.push(c);
                 self.advance();
-            }else if c == "." && !contains_dot {
+            }else if c == '.' && !contains_dot {
                 contains_dot = true;
                 num.push('.');
                 self.advance();
             }else{
                 break;
             }
-            
+            if let Some(c) = self.current_char() {
+                if c  == 'e' || c == 'E'{
+                    num.push(c);
+                    self.advance();
+                    if let Some(sign) = self.current_char() {
+                        if sign == '+' || sign == '-'{
+                            num.push(sign);
+                            self.advance();
+                        }
+                    }
+                }
+                let mut hase_exponents = false;
+                while let Some(c) = self.current_char() {
+                    if c.is_ascii_digit(){
+                        num.push(c);
+                        self.advance();
+                        hase_exponents = true;
+                    }
+                }
+                if !contains_dot {
+                    return Token::Err;
+                }
+            }
             
         }
+        return Token::Err;
         
     }
 }
