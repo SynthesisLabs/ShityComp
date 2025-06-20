@@ -1,4 +1,3 @@
-use crate::lexer::Token;
 
 mod lexer;
 mod test;
