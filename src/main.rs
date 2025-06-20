@@ -1,6 +1,7 @@
 use crate::lexer::Token;
 
 mod lexer;
+mod test;
 
 fn main() {
     let input = "123+456-200";
