@@ -80,7 +80,7 @@ impl Lexer{
 
         let char = self.current_char().unwrap();
         println!("char: {:?}", char);
-        return match char {
+        match char {
             '+' => {
                 self.advance();
                 Token::Plus
@@ -122,20 +122,22 @@ impl Lexer{
                     _ => return Token::Err,
                 }
             }
-            char if char.is_ascii_digit() => {
-                self.parse_nums()
+            char  if char.is_ascii_digit() => {
+                let test = self.parse_nums();
+                println!("test: {:?}", test);
+                return test
             },
             _ => {
 
                 eprint!("unexpected character {}", char);
                 return Token::Unknown
             }
-        };
+        }
     }
     fn parse_nums(&mut self)-> Token{
         let mut num = String::new();
         let mut contains_dot = false;
-    
+        
         //check if the current number contains a dot
         if let Some('.') = self.current_char() {
             contains_dot = true;
@@ -145,6 +147,7 @@ impl Lexer{
         //check for integers and a check for if the integers check fails
         while let Some(c) = self.current_char() {
             if c.is_ascii_digit() {
+                println!("Char is a num");
                 num.push(c);
                 self.advance();
             }else if c == '.' && !contains_dot {
@@ -165,7 +168,9 @@ impl Lexer{
                             self.advance();
                         }
                     }
-                }
+                }else{
+                    break;
+                }                
                 //check to see if after the scientific notation there are numbers if not return an error due illegal notation
                 let mut hase_exponents = false;
                 while let Some(c) = self.current_char() {
@@ -179,6 +184,7 @@ impl Lexer{
                     return Token::Err;
                 }
             }
+            println!("Hase dot: {}",contains_dot);
             // actually parse the string to an int/float and return them
             return if contains_dot || num.contains('e') || num.contains('E') {
                 match num.parse::<f64>() {
