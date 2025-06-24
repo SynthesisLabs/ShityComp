@@ -68,7 +68,7 @@ impl Lexer{
     }
 
     pub fn next_token(&mut self)-> Token{
-        
+
         while let Some(c) = self.current_char(){
             if !c.is_whitespace() {
                 break;
@@ -87,18 +87,31 @@ impl Lexer{
                 Token::Plus
             },
             '-' => {
+                let mut is_num = true;
                 let mut num = String::new();
-                match self.what_is_next_char() {
-                    Ok(Some(c)) if c.is_ascii_digit() => {
-                        num.push(c);
-                        self.advance();
+                while is_num{
+                    match self.what_is_next_char(){
+                        Ok(Some(c)) if c.is_numeric() => {
+                            num.push(c);
+                            self.advance();
+                            println!("Printed num {}", num);
+                            true;
+                        }
+                        Ok(Some(_)) | Ok(None) => {
+                            is_num = false;
+                        }
+                        Err(token) => {
+                            is_num = false;
+                            if !num.is_empty() {
+                                println!("Empty NOT num");
+                                return Token::Float(f64::from_str(&num).unwrap());
+                            }else{
+                                return Token::Err;
+                            }
+                        }
                     }
-                    Ok(Some(_)) | Ok(None) => return Token::Err,
-                    Err(token) => return token,
                 }
-                if !num.is_empty() {
-                    Token::Float(f64::from_str(&num).unwrap());
-                }
+               
                 self.advance();
                 Token::Minus
             },
@@ -168,7 +181,7 @@ impl Lexer{
                             self.advance();
                         }
                     }
-                }            
+                }
                 //check to see if after the scientific notation there are numbers if not return an error due illegal notation
                 let mut hase_exponents = false;
                 while let Some(c) = self.current_char() {
