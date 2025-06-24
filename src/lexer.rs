@@ -176,6 +176,8 @@ impl Lexer{
                         num.push(c);
                         self.advance();
                         hase_exponents = true;
+                    }else{
+                        break;
                     }
                     println!("Expo loop")
                 }
