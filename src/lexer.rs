@@ -19,12 +19,14 @@ pub enum Token {
 pub struct Lexer{
     input: Vec<char>,
     position: usize,
+    pub tokens: Vec<Token>,
 }
 impl Lexer{
     pub fn new(input: &str) -> Self{
         Lexer{
             input: input.chars().collect(),
             position: 0,
+            tokens: Vec::new(),
         }
     }
     fn current_char(&self)->Option<char>{
@@ -79,7 +81,6 @@ impl Lexer{
         }
 
         let char = self.current_char().unwrap();
-        println!("char: {:?}", char);
         match char {
             '+' => {
                 self.advance();
@@ -124,7 +125,6 @@ impl Lexer{
             }
             char  if char.is_ascii_digit() => {
                 let test = self.parse_nums();
-                println!("test: {:?}", test);
                 return test
             },
             _ => {
@@ -159,18 +159,16 @@ impl Lexer{
             }
             //checks for scientific notations
             if let Some(c) = self.current_char() {
-                if c  == 'e' || c == 'E'{
+                if c  == 'e' || c == 'E' {
                     num.push(c);
                     self.advance();
                     if let Some(sign) = self.current_char() {
-                        if sign == '+' || sign == '-'{
+                        if sign == '+' || sign == '-' {
                             num.push(sign);
                             self.advance();
                         }
                     }
-                }else{
-                    break;
-                }                
+                }            
                 //check to see if after the scientific notation there are numbers if not return an error due illegal notation
                 let mut hase_exponents = false;
                 while let Some(c) = self.current_char() {
@@ -179,6 +177,7 @@ impl Lexer{
                         self.advance();
                         hase_exponents = true;
                     }
+                    println!("Expo loop")
                 }
                 if !hase_exponents {
                     return Token::Err;
