@@ -96,8 +96,12 @@ impl Lexer{
                         num.push(char);
                     }
                     match self.what_is_next_char(){
+                        Ok(Some(c)) if c.is_whitespace() => {
+                            self.advance();
+                            return Token::Minus;
+                        }
                         Ok(Some(c)) if c.is_numeric() => {
-                            
+
                             num.push(c);
                             self.advance();
                             println!("Printed num {}", num);
@@ -117,9 +121,7 @@ impl Lexer{
                         }
                     }
                 }
-               
-                self.advance();
-                Token::Minus
+                return Token::Err;
             },
             '*' => {
                 self.advance();
