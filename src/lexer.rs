@@ -10,8 +10,8 @@ pub enum Token {
     Mul,    //Multiplier operator *
     Div,    //Division operator /
     Mod,    //Modules operator %
-    EOF,
-    Err,//End of input
+    EOF,    //End of input
+    Err,
     Whitespace,
     Unknown,
 }
@@ -32,6 +32,7 @@ impl Lexer{
     fn current_char(&self)->Option<char>{
         self.input.get(self.position).copied()
     }
+    
     //function to decide if the end of the input hase been reached
     fn eof(&self)->bool{
         if self.position >= self.input.len() {
@@ -101,15 +102,12 @@ impl Lexer{
                             return Token::Minus;
                         }
                         Ok(Some(c)) if c.is_numeric() => {
-
                             num.push(c);
                             self.advance();
                             println!("Printed num {}", num);
-                            true;
+                            is_num = true;
                         }
-                        Ok(Some(_)) | Ok(None) => {
-                            is_num = false;
-                        }
+                        Ok(Some(_)) | Ok(None) => { is_num = false; }
                         Err(token) => {
                             is_num = false;
                             return if !num.is_empty() {
@@ -227,6 +225,5 @@ impl Lexer{
 
         }
         return Token::Err;
-
     }
 }
