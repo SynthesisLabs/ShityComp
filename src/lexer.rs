@@ -114,7 +114,7 @@ impl Lexer{
                             is_num = false;
                             return if !num.is_empty() {
                                 println!("Empty NOT num");
-                                Token::Float(f64::from_str(&num).unwrap())
+                                Token::Number(i64::from_str(&num).unwrap())
                             }else{
                                 Token::Err
                             }
