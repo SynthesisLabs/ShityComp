@@ -7,10 +7,11 @@ pub fn test_lexer(input: &str){
     let mut lexer = lexer::Lexer::new(input);
     loop{
         let token = lexer.next_token();
-        println!("{:?}", token);
+        println!("{:?} \n", token);
         if token == Token::EOF||token == Token::Err{
             break;
         }
+        lexer.tokens.push(token);
     }
-
+    println!("Token list:  {:?}", lexer.tokens);
 }
