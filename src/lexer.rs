@@ -89,9 +89,15 @@ impl Lexer{
             '-' => {
                 let mut is_num = true;
                 let mut num = String::new();
+                let mut index = 0;
                 while is_num{
+                    index += 1;
+                    if(index == 1){
+                        num.push(char);
+                    }
                     match self.what_is_next_char(){
                         Ok(Some(c)) if c.is_numeric() => {
+                            
                             num.push(c);
                             self.advance();
                             println!("Printed num {}", num);
@@ -102,11 +108,11 @@ impl Lexer{
                         }
                         Err(token) => {
                             is_num = false;
-                            if !num.is_empty() {
+                            return if !num.is_empty() {
                                 println!("Empty NOT num");
-                                return Token::Float(f64::from_str(&num).unwrap());
+                                Token::Float(f64::from_str(&num).unwrap())
                             }else{
-                                return Token::Err;
+                                Token::Err
                             }
                         }
                     }
