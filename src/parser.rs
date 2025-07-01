@@ -1,25 +1,29 @@
-
 use std::fmt;
 
+//derive traits for easy comparison and logging
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+//define the NodeType enum to keep NodeTypes organized
 enum NodeType {
     NumericLiteral,
     String,
     Program,
 }
-
+//define NumericLiteral node
+#[derive(Debug)]
 struct NumericLiteral{
     node_type: NodeType,
     value: i64,
 }
+//define the Program node
 struct Program{
     node_type: NodeType,
     value : NumericLiteral,
 }
-
+//define the parser its self
 pub struct Parser{
     input: String,
 }
+//implement the display trait for the NodeType enum for easy logging
 impl fmt::Display for NodeType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let name = match self {
@@ -32,6 +36,7 @@ impl fmt::Display for NodeType {
         write!(f, "{}", name)
     }
 }
+//implement the display trait for the NumericLiteral struct for easy logging
 impl fmt::Display for NumericLiteral {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let name = match self {
@@ -43,7 +48,9 @@ impl fmt::Display for NumericLiteral {
         write!(f, "{}", name)
     }
 }
+//implement the actual parser
 impl Parser{
+    //create a constructor to set input on object creation
     pub fn new(input: &str) -> Parser{
         Parser{
             input: input.to_string(),
@@ -51,7 +58,6 @@ impl Parser{
     }
     pub fn parse(&mut self){
         self.program();
-        
         println!("Node type: {:?}",self.program().node_type);
         println!("Value: {} \n", self.program().value);
         println!("Numerical literal value: {}", self.program().value.value);
