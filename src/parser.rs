@@ -32,6 +32,17 @@ impl fmt::Display for NodeType {
         write!(f, "{}", name)
     }
 }
+impl fmt::Display for NumericLiteral {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let name = match self {
+            NumericLiteral{node_type, value: _} => node_type,
+            _ => {
+                return Err(fmt::Error);
+            }
+        };
+        write!(f, "{}", name)
+    }
+}
 impl Parser{
     pub fn new(input: &str) -> Parser{
         Parser{
@@ -40,12 +51,12 @@ impl Parser{
     }
     pub fn parse(&mut self){
         self.program();
+        
+        println!("Node type: {:?}",self.program().node_type);
+        println!("Value: {} \n", self.program().value);
+        println!("Numerical literal value: {}", self.program().value.value);
     }
     fn program(&mut self) -> Program{
-        self.numeric_literal();
-        println!("Number of literals: {}", self.input.len());
-        println!("Node type: {:?}",self.numeric_literal().node_type);
-        println!("Value: {}", self.numeric_literal().value); 
         Program{
             node_type: NodeType::Program,
             value: self.numeric_literal(),
