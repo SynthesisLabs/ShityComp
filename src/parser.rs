@@ -23,7 +23,7 @@ impl Parser{
         println!("Node type: {}",self.numeric_literal().node_type);
         println!("Value: {}", self.numeric_literal().value) 
     }
-    pub fn numeric_literal(&mut self)-> NumericLiteral{
+    fn numeric_literal(&mut self)-> NumericLiteral{
         NumericLiteral{
             node_type: "NumericLiteral".to_string(),
             value: self.input.trim().parse::<i64>().unwrap(),
