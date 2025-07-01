@@ -109,7 +109,6 @@ impl Lexer{
                         }
                         Ok(Some(_)) | Ok(None) => { is_num = false; }
                         Err(token) => {
-                            is_num = false;
                             return if !num.is_empty() {
                                 println!("Empty NOT num");
                                 Token::Number(i64::from_str(&num).unwrap())
