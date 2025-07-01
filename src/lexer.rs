@@ -93,7 +93,7 @@ impl Lexer{
                 let mut index = 0;
                 while is_num{
                     index += 1;
-                    if(index == 1){
+                    if index == 1{
                         num.push(char);
                     }
                     match self.what_is_next_char(){
