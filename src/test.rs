@@ -14,10 +14,11 @@ pub fn test_lexer(input: &str){
         }
         lexer.tokens.push(token);
     }
-    println!("Token list:  {:?}", lexer.tokens);
+    println!("Token list:  {:?} \n", lexer.tokens);
 }
 pub fn test_parser(input: &str){
     let mut parser = Parser::new(input);
     let ast = parser.parse();
+    println!("Parser Output:");
     println!("ast : {:?}", ast);
 }
