@@ -41,7 +41,7 @@ impl Parser{
     pub fn parse(&mut self){
         self.program();
     }
-    pub fn program(&mut self) -> Program{
+    fn program(&mut self) -> Program{
         self.numeric_literal();
         println!("Number of literals: {}", self.input.len());
         println!("Node type: {:?}",self.numeric_literal().node_type);
