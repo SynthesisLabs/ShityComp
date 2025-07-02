@@ -197,7 +197,6 @@ impl Lexer{
                     }else{
                         break;
                     }
-                    println!("Expo loop")
                 }
                 if !hase_exponents {
                     return Token::Err;
