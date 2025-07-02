@@ -62,6 +62,9 @@ impl Parser{
             pos: 0,
         }
     }
+    fn getCurrentToken(&self) -> Option<&Token>{
+        self.tokens.get(self.pos)
+    }
     fn advancePos(&mut self)-> Option<Token>{
         if self.pos < self.tokens.len(){
             let tok = self.tokens[self.pos].clone();
