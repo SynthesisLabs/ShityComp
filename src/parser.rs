@@ -1,4 +1,7 @@
 use std::fmt;
+use test::test_lexer;
+use crate::lexer::Token;
+use crate::test;
 
 //derive traits for easy comparison and logging
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -21,6 +24,8 @@ struct Program{
 }
 //define the parser its self
 pub struct Parser{
+    tokens : Vec<Token>,
+    pos: usize,
     input: String,
 }
 //implement the display trait for the NodeType enum for easy logging
@@ -53,10 +58,22 @@ impl Parser{
     //create a constructor to set input on object creation
     pub fn new(input: &str) -> Parser{
         Parser{
+            tokens: Vec::new(),
+            pos: 0,
             input: input.to_string(),
         }
     }
     pub fn parse(&mut self){
+        match test_lexer(self.input.as_str())
+        {
+            Ok(tokens) =>{
+                self.tokens = tokens;
+            }
+            Err(e) =>{
+                panic!("{}", e);
+            }
+        }
+        
         self.program();
         println!("Node type: {:?}",self.program().node_type);
         println!("Value: {} \n", self.program().value);
