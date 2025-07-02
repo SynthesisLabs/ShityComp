@@ -6,21 +6,15 @@ use crate::test;
 //derive traits for easy comparison and logging
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 //define the NodeType enum to keep NodeTypes organized
-enum NodeType {
-    NumericLiteral,
+enum AstNodeType {
+    NumericLiteral{value: i64},
     String,
     Program,
 }
-//define NumericLiteral node
-#[derive(Debug)]
-struct NumericLiteral{
-    node_type: NodeType,
-    value: i64,
-}
 //define the Program node
 struct Program{
-    node_type: NodeType,
-    value : NumericLiteral,
+    node_type: AstNodeType,
+    value : AstNodeType,
 }
 //define the parser its self
 pub struct Parser{
@@ -28,23 +22,10 @@ pub struct Parser{
     pos: usize,
 }
 //implement the display trait for the NodeType enum for easy logging
-impl fmt::Display for NodeType {
+impl fmt::Display for AstNodeType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let name = match self {
-            NodeType::NumericLiteral => "NumericLiteral",
-            NodeType::Program => "Program",
-            _ => {
-                return Err(fmt::Error);
-            }
-        };
-        write!(f, "{}", name)
-    }
-}
-//implement the display trait for the NumericLiteral struct for easy logging
-impl fmt::Display for NumericLiteral {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let name = match self {
-            NumericLiteral{node_type, value: _} => node_type,
+            AstNodeType::Program => "Program",
             _ => {
                 return Err(fmt::Error);
             }
@@ -79,18 +60,21 @@ impl Parser{
         self.program();
         println!("Node type: {:?}",self.program().node_type);
         println!("Value: {} \n", self.program().value);
-        println!("Numerical literal value: {}", self.program().value.value);
+        println!("Numerical literal value: {}", self.program().value);
     }
     fn program(&mut self) -> Program{
         Program{
-            node_type: NodeType::Program,
+            node_type: AstNodeType::Program,
             value: self.numeric_literal(),
         }
     }
-    fn numeric_literal(&mut self)-> NumericLiteral{
-        NumericLiteral{
-            node_type: NodeType::NumericLiteral,
-            value: self.input.trim().parse::<i64>().unwrap(),
+    fn numeric_literal(&mut self)-> AstNodeType{
+        match self.advancePos(){
+            Some(Token::Number(n)) =>{
+                println!("Numerical literal value: {}", n);
+                AstNodeType::NumericLiteral{value: n}
+            }, 
+            _=> panic!("Expected a num did not recieve")
         }
     }
 }
