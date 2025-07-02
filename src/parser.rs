@@ -55,10 +55,20 @@ impl fmt::Display for NumericLiteral {
 //implement the actual parser
 impl Parser{
     //create a constructor to set input on object creation
-    pub fn new() -> Parser{
+    pub fn new(input: String) -> Parser{
+        
         Parser{
-            tokens: Vec::new(),
+            tokens: test_lexer(&*input).expect("Oke"),
             pos: 0,
+        }
+    }
+    fn advancePos(&mut self)-> Option<Token>{
+        if self.pos < self.tokens.len(){
+            let tok = self.tokens[self.pos].clone();
+            self.pos += 1;
+            Some(tok)
+        }else{
+            Some(Token::EOF)
         }
     }
     pub fn parse(&mut self){
