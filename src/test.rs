@@ -24,10 +24,10 @@ pub fn test_lexer(input: &str)-> Result<Vec<Token>, String> {
         }
 
     }
-    
+
 }
 pub fn test_parser(input: &str){
-    let mut parser = Parser::new(input);
+    let mut parser = Parser::new(input.parse().unwrap());
     println!(" ");
     println!("Parser input: {}", input);
     println!(" ");
