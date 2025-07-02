@@ -26,7 +26,6 @@ struct Program{
 pub struct Parser{
     tokens : Vec<Token>,
     pos: usize,
-    input: String,
 }
 //implement the display trait for the NodeType enum for easy logging
 impl fmt::Display for NodeType {
@@ -56,24 +55,14 @@ impl fmt::Display for NumericLiteral {
 //implement the actual parser
 impl Parser{
     //create a constructor to set input on object creation
-    pub fn new(input: &str) -> Parser{
+    pub fn new() -> Parser{
         Parser{
             tokens: Vec::new(),
             pos: 0,
-            input: input.to_string(),
         }
     }
     pub fn parse(&mut self){
-        match test_lexer(self.input.as_str())
-        {
-            Ok(tokens) =>{
-                self.tokens = tokens;
-            }
-            Err(e) =>{
-                panic!("{}", e);
-            }
-        }
-        
+
         self.program();
         println!("Node type: {:?}",self.program().node_type);
         println!("Value: {} \n", self.program().value);
