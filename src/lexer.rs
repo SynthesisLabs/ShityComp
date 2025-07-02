@@ -1,6 +1,6 @@
 use std::str::FromStr;
-use logos::{Logos};
-#[derive(Logos, Debug, PartialEq)]
+
+#[derive(Clone, Debug, PartialEq)]
 //This is the tokenizer its goal is to take a stream of code into a stream of tokens we can use 
 pub enum Token {
     Float(f64),
