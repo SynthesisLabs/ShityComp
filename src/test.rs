@@ -9,17 +9,20 @@ pub fn test_lexer(input: &str)-> Result<Vec<Token>, String> {
     loop{
         let token = lexer.next_token();
         println!("{:?} \n", token);
-        if token == Token::EOF{
-            return Err("EOF".to_string())
-        }else if token == Token::Err{
-            panic!("Unexpected Error occurred please try again");
-        }else{
-            lexer.tokens.push(token);
-            return if !lexer.tokens.is_empty(){
-                println!("Token list:  {:?}", lexer.tokens);
-                Ok(lexer.tokens)
-            }else{
-                Err("Unexpected error".to_string())
+        match token{
+            Token::EOF =>{
+                if(lexer.tokens.is_empty()){
+                    return Err("No tokens were parsed empty input".to_string());
+                }
+                println!("End of file reached");
+                println!("Tokenlist: {:?} \n", lexer.tokens);
+                return Ok(lexer.tokens);
+            }
+            Token::Err=>{
+                return Err("Unexpected Error".to_string());
+            }
+            _=>{
+                lexer.tokens.push(token);
             }
         }
 
@@ -27,6 +30,7 @@ pub fn test_lexer(input: &str)-> Result<Vec<Token>, String> {
 
 }
 pub fn test_parser(input: &str){
+    
     let mut parser = Parser::new(input.parse().unwrap());
     println!(" ");
     println!("Parser input: {}", input);
