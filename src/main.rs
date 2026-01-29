@@ -7,7 +7,6 @@ mod file_reader;
 
 fn main() {
     let input;
-    // let input = "123+231*333";
     match file_reader::read_file_to_string("./calc.yor"){
         Ok(contents)=>{
             input = contents;
@@ -17,6 +16,5 @@ fn main() {
             return;
         }
     }
-
     test::test_evaluator(&*input);
 }
