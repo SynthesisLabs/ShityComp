@@ -47,7 +47,6 @@ impl Lexer{
     pub fn what_is_next_char(&self)->Result<Option<char>,Token>{
         let next_pos = self.position+1;
         if self.input.len()  > next_pos{
-            let next_pos = self.position +1;
             let next_char = self.input.get(next_pos).copied();
             Ok(next_char)
         }else{
