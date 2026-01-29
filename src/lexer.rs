@@ -186,38 +186,41 @@ impl Lexer{
                 println!("Char is a num");
                 num.push(c);
                 self.advance();
-            }else if c == '.' && !contains_dot {
+            } else if c == '.' && !contains_dot {
                 contains_dot = true;
                 num.push('.');
                 self.advance();
-            }else{
+            } else {
                 break;
             }
-            //checks for scientific notations
+        }
+        //checks for scientific notations
             if let Some(c) = self.current_char() {
                 if c  == 'e' || c == 'E' {
                     num.push(c);
                     self.advance();
+
                     if let Some(sign) = self.current_char() {
                         if sign == '+' || sign == '-' {
                             num.push(sign);
                             self.advance();
                         }
                     }
-                }
-                //check to see if after the scientific notation there are numbers if not return an error due illegal notation
-                let mut hase_exponents = false;
-                while let Some(c) = self.current_char() {
-                    if c.is_ascii_digit(){
-                        num.push(c);
-                        self.advance();
-                        hase_exponents = true;
-                    }else{
-                        break;
+
+                    //check to see if after the scientific notation there are numbers if not return an error due illegal notation
+                    let mut hase_exponents = false;
+                    while let Some(c) = self.current_char() {
+                        if c.is_ascii_digit() {
+                            num.push(c);
+                            self.advance();
+                            hase_exponents = true;
+                        } else {
+                            break;
+                        }
                     }
-                }
-                if !hase_exponents {
-                    return Token::Err;
+                    if !hase_exponents {
+                        return Token::Err;
+                    }
                 }
             }
             println!("Hase dot: {}",contains_dot);
@@ -237,9 +240,6 @@ impl Lexer{
                         }
                     }
                 }
-            }
-
-        }
-        return Token::Err;
+            };
     }
 }
