@@ -12,6 +12,7 @@ pub enum Token {
     Mod,    //Modules operator %
     EOF,    //End of input
     Err,
+    String(String),
     Whitespace,
     Unknown,
 }
@@ -144,6 +145,24 @@ impl Lexer{
                 let test = self.parse_nums();
                 return test
             },
+            char if char.is_ascii_alphabetic()=>{
+                let mut string = String::new();
+                string.push(char);
+                loop {
+                    if let Ok(Some(c)) = self.what_is_next_char(){
+                        if c.is_ascii_alphabetic(){
+                            string.push(c);
+                            self.advance();
+                        }else{
+                            break;
+                        }
+                    }else{
+                        break;
+                    }
+                }
+                self.advance();
+                return Token::String(string);
+            }
             _ => {
 
                 eprint!("unexpected character {}", char);

@@ -39,3 +39,9 @@ pub fn test_parser(input: &str){
     
     println!("ast : {:?}", ast);
 }
+pub fn test_evaluator(input: &str){
+    let mut parser = Parser::new(input.parse().unwrap());
+    let ast = parser.parse();
+    let result = crate::evaluator::evaluate(&ast);
+    println!("Evaluation result of '{}': {}", input, result);
+}
