@@ -42,6 +42,7 @@ pub fn test_parser(input: &str){
 pub fn test_evaluator(input: &str){
     let mut parser = Parser::new(input.parse().unwrap());
     let ast = parser.parse();
+    println!("Full AST: {:#?}", ast);
     let result = crate::evaluator::evaluate(&ast);
     println!("Evaluation result of '{}': {}", input, result);
 }

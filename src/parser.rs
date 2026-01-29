@@ -66,7 +66,9 @@ impl Parser{
     pub fn parse(&mut self) -> AstNodeType{
         for i in self.tokens.iter(){
             println!("parse() -> {:?}", i);
+
         }
+
         return self.program()
 
     }
@@ -85,6 +87,7 @@ impl Parser{
 
     fn parse_expression(&mut self) -> AstNodeType {
         self.parse_additive()
+
     }
 
     fn parse_additive(&mut self) -> AstNodeType {
