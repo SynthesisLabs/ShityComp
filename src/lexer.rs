@@ -88,37 +88,36 @@ impl Lexer{
                 Token::Plus
             },
             '-' => {
-                let mut is_num = true;
-                let mut num = String::new();
-                let mut index = 0;
-                while is_num{
-                    index += 1;
-                    if index == 1{
-                        num.push(char);
-                    }
-                    match self.what_is_next_char(){
-                        Ok(Some(c)) if c.is_whitespace() => {
-                            self.advance();
-                            return Token::Minus;
-                        }
+                let is_binary_op = !self.tokens.is_empty() && matches!(self.tokens.last(),Some(Token::Number(_)) | Some(Token::Float(_)));
+                if(is_binary_op){
+                    self.advance();
+                    return Token::Minus;
+                }else {
+                    return match self.what_is_next_char() {
                         Ok(Some(c)) if c.is_numeric() => {
-                            num.push(c);
+                            let mut num = String::from("-");
                             self.advance();
                             println!("Printed num {}", num);
-                            is_num = true;
-                        }
-                        Ok(Some(_)) | Ok(None) => { is_num = false; }
-                        Err(token) => {
-                            return if !num.is_empty() {
-                                println!("Empty NOT num");
-                                Token::Number(i64::from_str(&num).unwrap())
-                            }else{
-                                token
+                            while let Some(c) = self.current_char() {
+                                if c.is_ascii_digit() {
+                                    println!("Char is a num");
+                                    num.push(c);
+                                    self.advance();
+                                } else if c == '.' {
+                                    num.push('.');
+                                    self.advance();
+                                } else {
+                                    break;
+                                }
                             }
+                            Token::Number(num.parse().unwrap())
+                        }
+                        _ => {
+                            self.advance();
+                            Token::Minus
                         }
                     }
                 }
-                return Token::Err;
             },
             '*' => {
                 self.advance();

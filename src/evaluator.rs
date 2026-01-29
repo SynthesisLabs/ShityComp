@@ -2,7 +2,10 @@ use crate::parser::{AstNodeType, BinaryOperator};
 
 pub fn evaluate(node: &AstNodeType) -> i64 {
     match node {
-        AstNodeType::NumericLiteral { value } => *value,
+        AstNodeType::NumericLiteral { value } =>{
+            println!("Numericliteral: {}", value);
+            *value
+        },
 
         AstNodeType::BinaryExpression { left, operator, right } => {
             let left_val = evaluate(left);
