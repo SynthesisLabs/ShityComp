@@ -15,6 +15,8 @@ pub enum Token {
     String(String),
     Whitespace,
     Unknown,
+    LeftParen,
+    RightParen,
 }
 
 pub struct Lexer{
@@ -130,6 +132,14 @@ impl Lexer{
             '%' => {
                 self.advance();
                 Token::Mod
+            },
+            '(' => {
+                self.advance();
+                Token::LeftParen
+            },
+            ')' => {
+                self.advance();
+                Token::RightParen
             },
             '.' =>{
                 match self.what_is_next_char() {

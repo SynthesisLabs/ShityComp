@@ -58,6 +58,15 @@ impl Parser{
             Token::EOF
         }
     }
+    fn expect_token(&mut self, expected: Token) {
+        self.skip_whitespace();
+        match self.get_current_token() {
+            Some(token) if std::mem::discriminant(token) == std::mem::discriminant(&expected) => {
+                self.advance_pos();
+            }
+            other => panic!("Expected {:?}, found {:?}", expected, other),
+        }
+    }
     fn skip_whitespace(&mut self) {
         while matches!(self.get_current_token(), Some(Token::Whitespace)) {
             self.advance_pos();
@@ -136,17 +145,19 @@ impl Parser{
     fn parse_primary(&mut self) -> AstNodeType {
         self.skip_whitespace();
         match self.get_current_token() {
+            Some(Token::LeftParen) => {
+                self.advance_pos();
+                let expr = self.parse_expression();
+                self.expect_token(Token::RightParen);
+                expr
+            }
             Some(Token::Number(_)) => self.parse_numeric_literal(),
             Some(Token::String(_)) => self.parse_string_literal(),
             Some(Token::Err) => {
                 let tok = self.advance_pos();
                 panic!("lexer error token: {:?}", tok);
             }
-            Some(Token::EOF) | None => panic!("unexpected EOF while parsing expression"),
-            _ => {
-                let tok = self.advance_pos();
-                panic!("unexpected token: {:?}", tok)
-            }
+            other => panic!("unexpected token: {:?}", other),
         }
     }
 
